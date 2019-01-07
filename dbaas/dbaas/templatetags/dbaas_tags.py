@@ -35,7 +35,7 @@ def submit_row_extended_save_continue(context, add_confirmation=False):
 
 
 @register.inclusion_tag('admin/submit_line.html', takes_context=True)
-def submit_row_extended(context, add_confirmation=False):
+def submit_row_extended(context, add_confirmation=False, **kwargs):
     """
     Displays the row of buttons for delete and save.
     """
@@ -53,7 +53,9 @@ def submit_row_extended(context, add_confirmation=False):
         'is_popup': is_popup,
         'show_save': True,
         'delete_button_name': delete_button_name,
-        'add_confirmation': add_confirmation
+        'add_confirmation': add_confirmation,
+        'button_submit_name': kwargs['button_submit_name'],
+        'id': kwargs['id']
 
     }
     if context.get('original') is not None:

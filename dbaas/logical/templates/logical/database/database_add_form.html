@@ -17,45 +17,7 @@
     <fieldset class="module aligned {{ fieldset.classes }}">
     {% for line in fieldset %}
         {% for field in line %}
-            {% if field.field.name == 'plan' %}
-                <div class="row plans">
-                    <input id="plan-type" type="hidden" name="{{field.field.name}}" value="" />
-                    {% for plan_value, plan_name, plan in field.field.field.choices %}
-                    <div class="span3" style="display: none">
-                        <div class="well plan"
-                            {% for env in plan.environments.all %}data-environment-{{env.pk}}="1" {% endfor %}
-                            {% for engine in plan.engines %}data-engine-{{engine.pk}}="1" {% endfor %} >
-                            <div class="plan-description">
-                                {% if plan.is_ha %}<span class="badge pull-right label-warning" >HA</span>{% endif %}
-
-                                <h2 class="">{{plan_name}}</h2>
-                                <p>
-                                {% comment %}
-                                    <span>&nbsp;</span>
-                                {% endcomment %}
-                                </p>
-                                <p class="description">{{plan.description|safe|escape|default:""}}</p>
-                                <ul class="plan-attributes">
-                                    {% for plan_attribute in plan.plan_attributes.all %}
-                                    <li>{{plan_attribute.name}}: {{plan_attribute.value}}</li>
-                                    {% endfor %}
-                                </ul>
-                                {# <p>Use this space for description</p> #}
-                            </div>
-                            <div class="plan-chooser">
-                                <p class="text-center">
-
-                                    <span><button data-plan-id="{{plan_value}}" data-toggle="modal" data-target="#create_database_modal" class="btn" id="choose_plan_new_db">Choose</button></span>
-
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                {% include "admin/includes/field.html" %}
-            {% endif %}
+            {% include "admin/includes/field.html" %}
         {% endfor %}
     {% endfor %}
     </fieldset>
@@ -80,6 +42,8 @@
 
 {% endblock %}
 
-
-{% block submit_buttons_bottom %}{% endblock %}
+{% load dbaas_tags %}
+{% block submit_buttons_bottom %}
+    {% submit_row_extended 0  button_submit_name="Create Database"  id='create_database_modal' %}
+{% endblock %}
 

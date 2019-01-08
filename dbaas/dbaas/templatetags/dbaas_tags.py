@@ -54,8 +54,8 @@ def submit_row_extended(context, add_confirmation=False, **kwargs):
         'show_save': True,
         'delete_button_name': delete_button_name,
         'add_confirmation': add_confirmation,
-        'button_submit_name': kwargs['button_submit_name'],
-        'id': kwargs['id']
+        'button_submit_name': kwargs['button_submit_name'] if 'button_submit_name' in kwargs else None,
+        'id': kwargs['id'] if 'id' in kwargs else None
 
     }
     if context.get('original') is not None:

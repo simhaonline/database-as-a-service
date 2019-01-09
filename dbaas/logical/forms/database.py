@@ -6,9 +6,9 @@ from django.forms import models
 from django import forms
 from util import get_replication_topology_instance
 from drivers.factory import DriverFactory
-from physical.models import Plan, Environment, Engine, Offering, ReplicationTopology
+from physical.models import DiskOffering, Environment, Engine, Plan, Offering, ReplicationTopology
 from logical.forms.fields import AdvancedModelChoiceField
-from logical.models import Database, Project
+from logical.models import Database
 from logical.validators import database_name_evironment_constraint
 
 LOG = logging.getLogger(__name__)
@@ -18,22 +18,14 @@ class DatabaseForm(models.ModelForm):
     environment = forms.ModelChoiceField(queryset=Environment.objects)
     engine = forms.ModelChoiceField(queryset=Engine.objects)
     replication_topology = forms.ModelChoiceField(queryset=ReplicationTopology.objects)
+    disk_offering = forms.ModelChoiceField(queryset=DiskOffering.objects)
     offering = forms.ModelChoiceField(queryset=Offering.objects)
-    plan = forms.ModelChoiceField(queryset=Plan.objects)
-
-    TRUE_FALSE_CHOICES = (
-        ('','-------'),
-        (True, 'Sim'),
-        (False, 'Não')
-    )
-    is_ha = forms.ChoiceField(choices = TRUE_FALSE_CHOICES, label="Is HA?",
-                              widget=forms.Select, required=True)
 
     class Meta:
         model = Database
         fields = [
             'name', 'description', 'team', 'project', 'environment', 'engine',
-            'replication_topology', 'is_ha', 'plan',
+            'replication_topology', 'disk_offering', 'offering',
             'subscribe_to_email_events', 'is_in_quarantine'
         ]
 
@@ -79,9 +71,11 @@ class DatabaseForm(models.ModelForm):
             self._errors["name"] = self.error_class(
                 [_("Database name too long")])
 
-        plan = cleaned_data['plan']
+        replication_topology = cleaned_data['replication_topology']
+        plan = Plan.objects.get(replication_topology = replication_topology.id)
+        cleaned_data['plan'] = plan
 
-        class_path = plan.replication_topology.class_path
+        class_path = replication_topology.class_path
         driver_name = get_replication_topology_instance(class_path).driver_name
         driver = DriverFactory.get_driver_class(driver_name)
 
@@ -109,7 +103,7 @@ class DatabaseForm(models.ModelForm):
         if 'environment' in cleaned_data:
             environment = cleaned_data.get('environment', None)
             database_name = cleaned_data.get('name', None)
-            if not environment or environment not in plan.environments.all():
+            if not environment:
                 raise forms.ValidationError(
                     _("Invalid plan for selected environment."))
 

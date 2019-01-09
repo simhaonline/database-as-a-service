@@ -124,14 +124,16 @@ def create_database(
 
 def create_database_with_retry(
     name, plan, environment, team, project, description, task,
-    subscribe_to_email_events, is_protected, user, retry_from
+    subscribe_to_email_events, is_protected, user, retry_from,
+    disk_offering, offering
 ):
     from maintenance.tasks import create_database
     return create_database.delay(
         name=name, plan=plan, environment=environment, team=team,
         project=project, description=description, task=task,
         subscribe_to_email_events=subscribe_to_email_events,
-        is_protected=is_protected, user=user, retry_from=retry_from
+        is_protected=is_protected, user=user, retry_from=retry_from,
+        disk_offering=disk_offering, offering=offering
     )
 
 
@@ -1379,7 +1381,8 @@ class TaskRegister(object):
     @classmethod
     def database_create(cls, user, name, plan, environment, team, project,
                         description, subscribe_to_email_events=True,
-                        register_user=True, is_protected=False, retry_from=None):
+                        register_user=True, is_protected=False, retry_from=None,
+                        disk_offering=None, offering=None):
         task_params = {
             'task_name': "create_database",
             'arguments': "Database name: {}".format(name),
@@ -1403,7 +1406,8 @@ class TaskRegister(object):
                 name=name, plan=plan, environment=environment, team=team,
                 project=project, description=description, task=task,
                 subscribe_to_email_events=subscribe_to_email_events,
-                is_protected=is_protected, user=user, retry_from=retry_from
+                is_protected=is_protected, user=user, retry_from=retry_from,
+                disk_offering=disk_offering, offering=offering
             )
 
     @classmethod

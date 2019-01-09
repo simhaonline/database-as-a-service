@@ -69,7 +69,7 @@ def get_instances_for(infra, topology_path):
 def create_database(
     name, plan, environment, team, project, description, task,
     subscribe_to_email_events=True, is_protected=False, user=None,
-    retry_from=None
+    retry_from=None, disk_offering = None, offering = None
 ):
     topology_path = plan.replication_topology.class_path
 
@@ -82,6 +82,7 @@ def create_database(
     database_create.task = task
     database_create.name = name
     database_create.plan = plan
+    database_create.plan.stronger_offering = offering or database_create.plan.stronger_offering
     database_create.environment = environment
     database_create.team = team
     database_create.project = project
@@ -90,6 +91,7 @@ def create_database(
     database_create.is_protected = is_protected
     database_create.user = user.username if user else task.user
     database_create.infra = infra
+    database_create.infra.disk_offering = disk_offering or database_create.plan.disk_offering
     database_create.database = infra.databases.first()
     database_create.save()
 

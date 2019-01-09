@@ -214,7 +214,7 @@ def region_migration_start(self, infra, instances, since_step=None):
 def create_database(
     self, name, plan, environment, team, project, description, task,
     subscribe_to_email_events=True, is_protected=False, user=None,
-    retry_from=None
+    retry_from=None, disk_offering=None, offering=None
 ):
     task = TaskHistory.register(
         request=self.request, task_history=task, user=user,
@@ -224,7 +224,8 @@ def create_database(
     from tasks_create_database import create_database
     create_database(
         name, plan, environment, team, project, description, task,
-        subscribe_to_email_events, is_protected, user, retry_from
+        subscribe_to_email_events, is_protected, user, retry_from,
+        disk_offering, offering
     )
 
 

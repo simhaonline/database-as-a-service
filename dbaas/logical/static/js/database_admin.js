@@ -32,11 +32,9 @@
          }
     });
 
-    var Database = function() {
-        this.update_components();
-    };
+    var Database = function() {};
 
-    var response_test = null;
+    var response_aux = null;
     Database.prototype = {
         update_modal_message: function() {
             var environment_id = $("#id_environment").val() || "";
@@ -50,9 +48,6 @@
                   $("label[for=id_database_name] .modal_message .modal_extra_message").text(msg).css({'color': 'red'});
               });
             }
-        },
-        update_components: function() {
-            this.filter_plans();
         },
         update_engines: function(engines) {
             this.filter_engines(engines);
@@ -69,20 +64,18 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: "/physical/offering_by_engine/" + engine_id + "_" + environment_id + "/"
+                    url: "/physical/plans_by_engine/" + engine_id + "_" + environment_id + "/"
                 }).done(function (response) {
-                    response_test = response
+                    response_aux = response
                     if(response.plans.length !== 0){
                         response.plans.push("");
                         var options2ShowSelector = response.plans.map(function(plan) {
                           return "[value='" + plan['replication_topology_id'] + "']";
                         }).join(",");
-                        console.log("DEU MERDA: ", options2ShowSelector )
                         var $engineOptions = $("#id_replication_topology option");
                         $engineOptions.hide();
                         $engineOptions.filter(options2ShowSelector).show();
                         var selectedId = parseInt($engineOptions.filter(':selected').val(), 10);
-                        console.log("TESTE: ", response.plans.indexOf(selectedId))
                         if (response.plans.indexOf(selectedId) === -1) {
                           $engineOptions.filter("[value='']").eq(0).attr('selected', 'selected');
                         }
@@ -93,39 +86,6 @@
                     }
                 });
             }
-        },
-        filter_plans: function(engine_id){
-            engine_id = engine_id || $("#id_engine").val() || "none";
-            var environment_id = $("#id_environment").val() || "none";
-            var replication_topology_id = $("#id_replication_topology").val() || "none";
-
-            if(environment_id !== "none"){
-                response = response_test
-
-                var value_plans = response.plans.map(function(plan) {
-                    if (plan['replication_topology_id'] == replication_topology_id){
-                        return plan['plans']
-                    }
-                })
-                if(response.plans.length !== 0){
-                    response.plans.push("");
-                    var options2ShowSelector = value_plans.map(function(value) {
-                      return "[value='" + value + "']";
-                    }).join(",");
-                    var $engineOptions = $("#id_plan option");
-                    $engineOptions.hide();
-                    $engineOptions.filter(options2ShowSelector).show();
-                    var selectedId = parseInt($engineOptions.filter(':selected').val(), 10);
-                    if (response.plans.indexOf(selectedId) === -1) {
-                      $engineOptions.filter("[value='']").eq(0).attr('selected', 'selected');
-                    }
-                }
-                else{
-                    engine_selector.innerHTML = '<option selected="selected">' +
-                                                'This environment has no active plans</option>';
-                }
-            }
-
         },
         filter_engines: function(all_engines) {
             var environment_id = $("#id_environment").val() || "none";
@@ -149,7 +109,6 @@
                         var selectedId = parseInt($engineOptions.filter(':selected').val(), 10);
                         if (response.engines.indexOf(selectedId) === -1) {
                           $engineOptions.filter("[value='']").eq(0).attr('selected', 'selected');
-                          self.filter_plans('none');
                         }
                     }
                     else{
@@ -174,11 +133,6 @@
             field_replication_topology = field_replication_topology[0];
         }
 
-        field_plan = document.getElementsByClassName("field-plan");
-        if(field_plan.length !== 0){
-            field_plan = field_plan[0];
-        }
-
         //Saving all engines before changing it
         engine_selector = document.getElementById("id_engine");
         if(engine_selector !== null){
@@ -192,16 +146,9 @@
 
         $("#id_environment").on("change", function() {
             database.update_engines(engines);
-            database.update_components();
             database.update_modal_message();
         });
         $("#id_environment").change();
-
-        $("#id_replication_topology").on("change", function() {
-//            database.update_replication_topology();
-              database.filter_plans();
-        });
-        $("#id_replication_topology").change();
 
         $("#id_engine").on("change", function() {
             database.update_replication_topology();

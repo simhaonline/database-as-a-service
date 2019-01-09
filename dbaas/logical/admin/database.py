@@ -321,10 +321,11 @@ class DatabaseAdmin(admin.DjangoServicesAdmin):
                 if not form.is_valid():
                     return super(DatabaseAdmin, self).add_view(request, form_url, extra_context=extra_context)
 
-                database_creation_message = "call create_database - name={}, plan={}, environment={}, team={}, project={}, description={}, user={}, subscribe_to_email_events {}".format(
+                database_creation_message = "call create_database - name={}, plan={}, environment={}, team={}, project={}, disk_offering={}, stronger_offering={}description={}, user={}, subscribe_to_email_events {}".format(
                     form.cleaned_data['name'], form.cleaned_data['plan'],
                     form.cleaned_data['environment'], form.cleaned_data['team'],
-                    form.cleaned_data['project'], form.cleaned_data['description'],
+                    form.cleaned_data['project'], form.cleaned_data['disk_offering'],
+                    form.cleaned_data['offering'], form.cleaned_data['description'],
                     request.user, form.cleaned_data['subscribe_to_email_events']
                 )
                 LOG.debug(database_creation_message)
@@ -337,7 +338,9 @@ class DatabaseAdmin(admin.DjangoServicesAdmin):
                     project=form.cleaned_data['project'],
                     description=form.cleaned_data['description'],
                     subscribe_to_email_events=form.cleaned_data['subscribe_to_email_events'],
-                    user=request.user
+                    user=request.user,
+                    disk_offering=form.cleaned_data['disk_offering'],
+                    offering=form.cleaned_data['offering']
                 )
                 url = reverse('admin:notification_taskhistory_changelist')
                 # Redirect after POST

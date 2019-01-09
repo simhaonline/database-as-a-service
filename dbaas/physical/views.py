@@ -34,7 +34,7 @@ def topology_by_eng(self, engine_id):
     return HttpResponse(response_json, content_type="application/json")
 
 
-def offering_by_engine(self, engine_id, environment_id):
+def plans_by_engine(self, engine_id, environment_id):
     engine = Engine.objects.get(id=engine_id)
     environment = Environment.objects.get(id=environment_id)
     plans = engine.plans.filter(environments=environment, is_active=True

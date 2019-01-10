@@ -72,7 +72,7 @@ class DatabaseForm(models.ModelForm):
                 [_("Database name too long")])
 
         replication_topology = cleaned_data['replication_topology']
-        plan = Plan.objects.get(replication_topology = replication_topology.id)
+        plan = Plan.objects.filter(replication_topology=replication_topology.id)[0]
         cleaned_data['plan'] = plan
 
         class_path = replication_topology.class_path

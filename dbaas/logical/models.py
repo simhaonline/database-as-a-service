@@ -459,7 +459,7 @@ class Database(BaseModel):
     def get_offering_name(self):
         LOG.info("Get offering")
         try:
-            offer_name = self.infra.offering.name
+            offer_name = self.infra.instance_offering.name
         except Exception as e:
             LOG.info("Oops...{}".format(e))
             offer_name = None

@@ -579,6 +579,10 @@ class DatabaseInfra(BaseModel):
         DiskOffering, related_name="databaseinfras",
         on_delete=models.PROTECT, null=True
     )
+    offering = models.ForeignKey(
+        Offering, related_name="databaseinfras",
+        on_delete=models.PROTECT, null=True
+    )
     database_key = models.CharField(
         verbose_name=_("Database Key"), max_length=255, blank=True, null=True,
         help_text=_("Databases like MongoDB use a key file to replica set"),
@@ -616,7 +620,7 @@ class DatabaseInfra(BaseModel):
             raise ValidationError({'engine': _("Invalid environment")})
 
     @property
-    def offering(self):
+    def instance_offering(self):
         database_instances = self.get_driver().get_database_instances()
 
         return database_instances and database_instances[0].offering

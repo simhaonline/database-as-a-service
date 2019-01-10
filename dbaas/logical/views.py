@@ -1347,7 +1347,7 @@ def database_migrate(request, context, database):
         for env in group.environments.all():
             context["environments"].add(env)
     context["current_environment"] = environment
-    context["current_offering"] = database.infra.offering
+    context["current_offering"] = database.infra.instance_offering
 
     from maintenance.models import HostMigrate
     migrates = HostMigrate.objects.filter(host__in=hosts)

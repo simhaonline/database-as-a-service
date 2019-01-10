@@ -7,7 +7,7 @@ from workflow.workflow import steps_for_instances, rollback_for_instances_full
 from models import DatabaseCreate
 
 
-def get_or_create_infra(base_name, plan, environment, retry_from=None):
+def get_or_create_infra(base_name, plan, environment, retry_from=None, disk_offering=None, offering=None):
     if retry_from:
         infra = retry_from.infra
         base_name['infra'] = infra.name
@@ -21,7 +21,8 @@ def get_or_create_infra(base_name, plan, environment, retry_from=None):
         infra.last_vm_created = 0
         infra.engine = plan.engine
         infra.plan = plan
-        infra.disk_offering = plan.disk_offering
+        infra.disk_offering = disk_offering or plan.disk_offering
+        infra.offering = offering or plan.stronger_offering
         infra.environment = environment
         infra.capacity = 1
         infra.per_database_size_mbytes = plan.max_db_size
@@ -69,20 +70,20 @@ def get_instances_for(infra, topology_path):
 def create_database(
     name, plan, environment, team, project, description, task,
     subscribe_to_email_events=True, is_protected=False, user=None,
-    retry_from=None, disk_offering = None, offering = None
+    retry_from=None, disk_offering=None, offering=None
 ):
     topology_path = plan.replication_topology.class_path
 
     name = slugify(name)
     base_name = gen_infra_names(name, 0)
-    infra = get_or_create_infra(base_name, plan, environment, retry_from)
+    infra = get_or_create_infra(base_name, plan, environment, retry_from,
+                                disk_offering, offering)
     instances = get_instances_for(infra, topology_path)
 
     database_create = DatabaseCreate()
     database_create.task = task
     database_create.name = name
     database_create.plan = plan
-    database_create.plan.stronger_offering = offering or database_create.plan.stronger_offering
     database_create.environment = environment
     database_create.team = team
     database_create.project = project
@@ -91,7 +92,6 @@ def create_database(
     database_create.is_protected = is_protected
     database_create.user = user.username if user else task.user
     database_create.infra = infra
-    database_create.infra.disk_offering = disk_offering or database_create.plan.disk_offering
     database_create.database = infra.databases.first()
     database_create.save()
 

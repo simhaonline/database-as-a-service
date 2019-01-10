@@ -133,6 +133,9 @@
             field_replication_topology = field_replication_topology[0];
         }
 
+        var $replicationOptions = $("#id_replication_topology option")
+        $replicationOptions.hide()
+
         //Saving all engines before changing it
         engine_selector = document.getElementById("id_engine");
         if(engine_selector !== null){

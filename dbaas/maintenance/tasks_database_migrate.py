@@ -32,7 +32,7 @@ def database_environment_migrate(
     database_migrate.environment = new_environment
     database_migrate.origin_environment = database.environment
     database_migrate.offering = new_offering
-    database_migrate.origin_offering = database.infra.offering
+    database_migrate.origin_offering = database.infra.instance_offering
     database_migrate.save()
 
     instances = build_migrate_hosts(hosts_zones, database_migrate)

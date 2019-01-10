@@ -342,7 +342,6 @@ class CreateVirtualMachine(HostProviderStep):
 
     @property
     def stronger_offering(self):
-        # return self.plan.stronger_offering #pegar da infra
         return self.infra.offering
 
     @property

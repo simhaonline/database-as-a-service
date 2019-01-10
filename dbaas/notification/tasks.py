@@ -1053,7 +1053,7 @@ def resize_database(self, database, user, task, offering, original_offering=None
     infra = database.infra
 
     if not original_offering:
-        original_offering = database.infra.offering
+        original_offering = database.infra.instance_offering
 
     database_resize = DatabaseResize(
         database=database,

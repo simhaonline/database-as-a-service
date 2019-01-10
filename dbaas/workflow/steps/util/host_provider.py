@@ -342,7 +342,8 @@ class CreateVirtualMachine(HostProviderStep):
 
     @property
     def stronger_offering(self):
-        return self.plan.stronger_offering
+        # return self.plan.stronger_offering #pegar da infra
+        return self.infra.offering
 
     @property
     def weaker_offering(self):
@@ -353,7 +354,7 @@ class CreateVirtualMachine(HostProviderStep):
         if self.host_migrate and self.host_migrate.database_migrate:
             return self.host_migrate.database_migrate.offering
         if self.has_database:
-            return self.infra.offering
+            return self.infra.instance_offering
         return self.stronger_offering
 
     @property

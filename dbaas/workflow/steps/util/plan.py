@@ -73,7 +73,7 @@ class PlanStep(BaseInstanceStep):
             return self.resize.target_offer
 
         try:
-            return self.infra.offering
+            return self.infra.instance_offering
         except Offering.DoesNotExist:
             return self.instance.offering
 

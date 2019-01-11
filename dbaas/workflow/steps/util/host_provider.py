@@ -143,6 +143,8 @@ class Provider(object):
         url = "{}/{}/{}/host/resize".format(
             self.credential.endpoint, self.provider, self.environment
         )
+        self.infra.offering = offering
+        self.infra.save()
         data = {
             "host_id": self.host.identifier,
             "cpus": offering.cpus,

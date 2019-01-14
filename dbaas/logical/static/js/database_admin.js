@@ -72,12 +72,12 @@
                         var options2ShowSelector = response.plans.map(function(plan) {
                           return "[value='" + plan['replication_topology_id'] + "']";
                         }).join(",");
-                        var $engineOptions = $("#id_replication_topology option");
-                        $engineOptions.hide();
-                        $engineOptions.filter(options2ShowSelector).show();
-                        var selectedId = parseInt($engineOptions.filter(':selected').val(), 10);
+                        var $replicationTopologyOptions = $("#id_replication_topology option");
+                        $replicationTopologyOptions.hide();
+                        $replicationTopologyOptions.filter(options2ShowSelector).show();
+                        var selectedId = parseInt($replicationTopologyOptions.filter(':selected').val(), 10);
                         if (response.plans.indexOf(selectedId) === -1) {
-                          $engineOptions.filter("[value='']").eq(0).attr('selected', 'selected');
+                          $replicationTopologyOptions.filter("[value='']").eq(0).attr('selected', 'selected');
                         }
                     }
                     else{
@@ -107,7 +107,8 @@
                         $engineOptions.hide();
                         $engineOptions.filter(options2ShowSelector).show();
                         var selectedId = parseInt($engineOptions.filter(':selected').val(), 10);
-                        if (response.engines.indexOf(selectedId) === -1) {
+                        if (!$engineOptions.filter(":selected").is(":visible")){
+                          self.update_replication_topology()
                           $engineOptions.filter("[value='']").eq(0).attr('selected', 'selected');
                         }
                     }

@@ -143,8 +143,7 @@ class Provider(object):
         url = "{}/{}/{}/host/resize".format(
             self.credential.endpoint, self.provider, self.environment
         )
-        self.infra.offering = offering
-        self.infra.save()
+
         data = {
             "host_id": self.host.identifier,
             "cpus": offering.cpus,
@@ -156,6 +155,8 @@ class Provider(object):
                 response.content,
                 response
             )
+        self.infra.offering = offering
+        self.infra.save()
         return True
 
     def create_host(self, infra, offering, name, team_name, zone=None, database_name=''):

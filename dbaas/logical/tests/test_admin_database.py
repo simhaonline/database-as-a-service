@@ -23,6 +23,9 @@ class AdminCreateDatabaseTestCase(TestCase):
         self.environment = self.plan.environments.all()[0]
         self.databaseinfra = physical_factory.DatabaseInfraFactory(
             plan=self.plan, environment=self.environment, capacity=10)
+        self.replication_topology = self.plan.replication_topology_id
+        self.disk_offering = self.databaseinfra.disk_offering_id
+        self.offering = self.databaseinfra.offering_id
         self.instance = physical_factory.InstanceFactory(
             address="127.0.0.1", port=27017, databaseinfra=self.databaseinfra)
         self.project = factory.ProjectFactory()
@@ -44,9 +47,11 @@ class AdminCreateDatabaseTestCase(TestCase):
         params = {
             "name": database_name,
             "project": self.project.pk,
-            "plan": self.plan.pk,
             "environment": self.environment.pk,
             "engine": self.databaseinfra.engine.pk,
+            "replication_topology": self.replication_topology,
+            "disk_offering": self.disk_offering,
+            "offering": self.offering,
             "description": self.description,
         }
         response = self.client.post("/admin/logical/database/add/", params)
@@ -58,9 +63,11 @@ class AdminCreateDatabaseTestCase(TestCase):
         params = {
             "name": database_name,
             "project": self.project.pk,
-            "plan": self.plan.pk,
             "environment": self.environment.pk,
             "engine": self.databaseinfra.engine.pk,
+            "replication_topology": self.replication_topology,
+            "disk_offering": self.disk_offering,
+            "offering": self.offering,
             "team": self.team.pk
         }
         response = self.client.post("/admin/logical/database/add/", params)
@@ -74,9 +81,11 @@ class AdminCreateDatabaseTestCase(TestCase):
         params = {
             "name": database_name,
             "project": self.project.pk,
-            "plan": self.plan.pk,
             "environment": self.environment.pk,
             "engine": self.databaseinfra.engine.pk,
+            "replication_topology": self.replication_topology,
+            "disk_offering": self.disk_offering,
+            "offering": self.offering,
             "team": self.team.pk,
             "description": self.description,
         }
@@ -99,9 +108,11 @@ class AdminCreateDatabaseTestCase(TestCase):
         params = {
             "name": database_name,
             "project": self.project.pk,
-            "plan": self.plan.pk,
             "environment": self.environment.pk,
             "engine": self.databaseinfra.engine.pk,
+            "replication_topology": self.replication_topology,
+            "disk_offering": self.disk_offering,
+            "offering": self.offering,
             "team": self.team.pk,
             "description": self.description,
         }

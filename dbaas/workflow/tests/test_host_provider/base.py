@@ -44,5 +44,7 @@ class BaseCreateVirtualMachineTestCase(TestCase):
         )
         self.instance = self._create_instance()
         self.infra = self.instance.databaseinfra
+        self.infra.offering = self.stronger_offering
+        self.infra.save()
 
         self.host_provider = CreateVirtualMachine(self.instance)

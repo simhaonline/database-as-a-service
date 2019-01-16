@@ -781,7 +781,7 @@ class DatabaseInfra(BaseModel):
         configuration = configuration_factory(
             self,
             # self.cs_dbinfra_offering.get().offering.memory_size_mb
-            self.offering.memory_size_mb
+            self.instance_offering.memory_size_mb
         )
         return getattr(configuration, parameter_name).default
 

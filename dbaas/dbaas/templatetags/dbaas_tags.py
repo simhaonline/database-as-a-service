@@ -35,7 +35,9 @@ def submit_row_extended_save_continue(context, add_confirmation=False):
 
 
 @register.inclusion_tag('admin/submit_line.html', takes_context=True)
-def submit_row_extended(context, add_confirmation=False, **kwargs):
+def submit_row_extended(context, add_confirmation=False,
+                        button_submit_name=None,
+                        **kwargs):
     """
     Displays the row of buttons for delete and save.
     """
@@ -43,6 +45,12 @@ def submit_row_extended(context, add_confirmation=False, **kwargs):
     change = context['change']
     is_popup = context['is_popup']
     delete_button_name = context.get('delete_button_name', 'Delete')
+    extra_attribs = ""
+    for attrib, value in kwargs.items():
+        extra_attribs = "{} {}={} ".format(extra_attribs,
+                                           "-".join(attrib.split("_")),
+                                           value)
+
     # TODO:
     # show_delete_link permission name should be parametrized
     ctx = {
@@ -54,8 +62,8 @@ def submit_row_extended(context, add_confirmation=False, **kwargs):
         'show_save': True,
         'delete_button_name': delete_button_name,
         'add_confirmation': add_confirmation,
-        'button_submit_name': kwargs['button_submit_name'] if 'button_submit_name' in kwargs else None,
-        'id': kwargs['id'] if 'id' in kwargs else None
+        'button_submit_name': button_submit_name,
+        'extra_attribs': extra_attribs
 
     }
     if context.get('original') is not None:

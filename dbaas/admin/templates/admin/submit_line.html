@@ -32,7 +32,7 @@
                 {% if add_confirmation %} 
                     <button data-toggle="modal" data-target="#save_submit_modal" class="btn btn-primary">Save</button>
                 {% else %}
-                    <input type="submit" value="{{ button_submit_name|default:'Save'}}" name="_save" {{ onclick_attrib }} class="btn btn-primary"/>
+                    <input type="submit" value="{{ button_submit_name|default:'Save'}}" name="_save" {{ onclick_attrib }} {{ extra_attribs }} class="btn btn-primary"/>
                 {% endif %}
             {% endif %}
         </div>

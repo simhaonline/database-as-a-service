@@ -38,12 +38,12 @@
   });
 </script>
 
-{% include "admin/confirmation_modal.html" with modal_id="create_database_modal" confirmation_message="Are you sure you want to create a database with these settings?" box_title="Adding Database" button_type="submit" id_optional="id=id_create_database_btn_modal" %}
+{% include "admin/confirmation_modal.html" with modal_id="create_database_modal" confirmation_message="Are you sure you  want to create a database with these settings?" box_title="Adding Database"  button_type="submit" id_optional="id=id_create_database_btn_modal" %}
 
 {% endblock %}
 
 {% load dbaas_tags %}
 {% block submit_buttons_bottom %}
-    {% submit_row_extended 0  button_submit_name="Create Database"  id='create_database_modal' %}
+    {% submit_row_extended 0  button_submit_name="Create Database" id='create_database_modal' data_toggle="modal" data_target="#create_database_modal"%}
 {% endblock %}
 

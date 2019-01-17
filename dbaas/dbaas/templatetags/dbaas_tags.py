@@ -48,7 +48,7 @@ def submit_row_extended(context, add_confirmation=False,
     extra_attribs = ""
     for attrib, value in kwargs.items():
         extra_attribs = "{} {}={} ".format(extra_attribs,
-                                           "-".join(attrib.split("_")),
+                                           attrib.replace('_', '-'),
                                            value)
 
     # TODO:

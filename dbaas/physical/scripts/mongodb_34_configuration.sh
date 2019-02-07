@@ -62,7 +62,8 @@ processManagement:
 ## Log Options
 ########################################
 systemLog:
-    destination: syslog
+    destination: file
+    path: /data/logs/mongodb.log
     quiet: {{ configuration.quiet.value }}
     verbosity: {{ configuration.logLevel.value }}
 
@@ -106,6 +107,30 @@ EOF_DBAAS
     die_if_error "Error setting mongodb.conf"
 
     chown mongodb:mongodb /data/mongodb.conf
+    die_if_error "Error changing mongodb conf file owner"
+}
+
+createconfigdbrsyslogfile()
+{
+    echo ""; echo $(date "+%Y-%m-%d %T") "- Creating the rsyslog config file"
+
+(cat <<EOF_DBAAS
+#mongodb.conf 3.4 rsyslog.d configuration
+
+$ModLoad imfile
+$InputFileName /data/logs/mongodb.log
+$InputFileTag mongod27017:
+$InputFileStateFile mongodb-log-dbaas
+
+$InputFileSeverity info
+$InputFileFacility local0
+$InputRunFileMonitor
+
+EOF_DBAAS
+) > /etc/rsyslog.d/mongodb.conf
+    die_if_error "Error setting mongodb.conf"
+
+    chown mongodb:mongodb /etc/rsyslog.d/mongodb.conf
     die_if_error "Error changing mongodb conf file owner"
 }
 

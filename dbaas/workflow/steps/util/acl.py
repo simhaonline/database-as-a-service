@@ -75,6 +75,22 @@ class ReplicateAclsMigrate(ReplicateAcls2NewInstance):
     def destination_instance(self):
         return self.host
 
+    def do(self):
+        from tsuru.views import get_network_from_ip
+        if self.acl_client is None:
+            return
+        new_ip = self.destination_instance.address
+        network_of_new_ip = get_network_from_ip(
+            new_ip,
+            self.infra.environment
+        )
+        replicate_acl_for(
+            database=self.database,
+            old_ip=self.source_instance.address,
+            new_ip=new_ip,
+            network_of_new_ip=network_of_new_ip
+        )
+
 
 class BindNewInstance(ACLStep):
 

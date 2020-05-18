@@ -75,7 +75,7 @@ remove_log_rotate_file = 'rm -f /etc/logrotate.d/mongodb_rotate'
 create_mongodb_rotate_script = 'install -m 755 /dev/null /opt/dbaas/scripts/mongodb_rotate_script.sh'
 create_log_params_script = 'install -m 755 /dev/null /opt/dbaas/scripts/log_rotate_params.sh'
 
-create_profile_file = 'export MONGODB_ADMIN_USER=admindbaas;export MONGODB_ADMIN_PASSWORD=Rt2va8Mc;source /opt/dbaas/scripts/log_rotate_params.sh'
+create_profile_file = 'source /opt/dbaas/scripts/log_rotate_params.sh'
 add_cron_job = '! (crontab -l | grep -q "/opt/dbaas/scripts/mongodb_rotate_script.sh") && (crontab -l; echo "0 0 * * * /opt/dbaas/scripts/mongodb_rotate_script.sh") | crontab -'
 
 def execute(task, mongodb_restarted_hosts):

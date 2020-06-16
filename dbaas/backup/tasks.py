@@ -11,9 +11,8 @@ from system.models import Configuration
 from util.decorators import only_one
 from workflow.steps.util.volume_provider import VolumeProviderBase
 from models import Snapshot, BackupGroup
-from util import (
-    exec_remote_command_host, get_worker_name, get_credentials_for, get_now
-)
+from util import (exec_remote_command_host, get_worker_name,
+                  get_credentials_for)
 
 LOG = getLogger(__name__)
 
@@ -125,7 +124,7 @@ def make_instance_snapshot_backup(instance, error, group,
             'make_database_backup_hour'
             )
         if (snapshot_final_status == Snapshot.WARNING and has_snapshot):
-            if current_hour in [int(hour) for hour in backup_hour_list]:
+            if str(current_hour) in backup_hour_list:
                 raise Exception(
                     "Backup with WARNING already created today."
                     )
@@ -233,7 +232,7 @@ def make_databases_backup(self):
     if not env_names_order:
         env_names_order = [env.name for env in environments]
 
-    current_time = get_now()
+    current_time = datetime.now()
     current_hour = current_time.hour
 
     # Get all infras with a backup today until the current hour
